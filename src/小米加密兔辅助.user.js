@@ -5,7 +5,7 @@
 // @description  抢小米加密兔专用
 // @author       Mars Shen
 // @require      https://code.jquery.com/jquery-latest.js
-// @match        https://jiamitu.mi.com/home
+// @match        https://jiamitu.mi.com/home*
 // @grant        none
 // ==/UserScript==
 
