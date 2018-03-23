@@ -5,18 +5,5 @@
 
 ## 使用方法
 
-* 使用前请先在Chrome下载Tampermonkey插件.
-* 下载脚本文件XiaoMi-JiaMiTu-Tools.zip至本地.
-* 将文件XiaoMi-JiaMiTu-Tools.zip导入Tampermonkey.
-* 前往 https://jiamitu.mi.com/home 小米加密兔领养页面并登陆你自己的账号.
-* 确保脚本开启. 
-* 当活动时间开始前1分钟点击**开始抢加密兔**. 当页面提示你已抢到, 说明抢领成功.
-
-开启前效果:
-
-![开启前](https://github.com/Mars-Shen/XiaoMi-JiaMiTu-Tools/blob/master/img/jiamitu-0.png)
-
-开启后效果:
-
-![开启后](https://github.com/Mars-Shen/XiaoMi-JiaMiTu-Tools/blob/master/img/jiamitu-1.png)
+具体使用方法: [点我查看](http://www.marsshen.com/%E5%8C%BA%E5%9D%97%E9%93%BE/2018/03/23/%E9%A2%86%E5%85%BB%E5%B0%8F%E7%B1%B3%E5%8A%A0%E5%AF%86%E5%85%94%E8%BE%85%E5%8A%A9%E5%B7%A5%E5%85%B7/)
 
