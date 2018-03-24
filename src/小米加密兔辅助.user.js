@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         小米加密兔辅助
 // @namespace    http://tampermonkey.net/
-// @version      0.1.0
+// @version      0.1.1
 // @description  抢小米加密兔专用
 // @author       Mars Shen
 // @require      https://code.jquery.com/jquery-latest.js
@@ -12,7 +12,9 @@
 (function() {
     'use strict';
     //============Configuration===========
-    var AJAX_REQUEST_URL = 'https://jiamitu.mi.com/pet/rush/pet?followUp=https:%2F%2Fjiamitu.mi.com%2Fhome';
+    var XIAOMI_HOME = 'https://jiamitu.mi.com';
+    var AJAX_REQUEST_URL = XIAOMI_HOME + '/pet/rush/pet';
+    var START_TIME_URL = XIAOMI_HOME + '/pet/rush/startTime';
     var SHOW_DEBUG_BUTTON = false;      //Show debug button or not
     var CLICK_INTERVAL_MIN = 50;        //Request interval min time(ms)
     var CLICK_INTERVAL_MAX = 500;       //Request interval max time(ms)
@@ -30,6 +32,9 @@
     var width = $('.mitu-hm-oper').width();
     var infoHeight = $('.mitu-info').height();
     var requestErrorCounter = 0;
+    var hasRabbit = null;
+    var hasEvent = null;
+    var judgeHasEventTimeTimeId = -1;
     //====================================
 
     $(BUTTON_ID).attr('id','mitu_btn_tools');
@@ -65,6 +70,7 @@
         AJAX_BTN_FLAG = !AJAX_BTN_FLAG;
         changeAjaxBtnValueByFlag();
         if(AJAX_BTN_FLAG){
+            judgeHasEventTime();
             for(var i=0;i<MAX_REQUEST;i++){
                 setAjaxIntervalClick(i);
             }
@@ -72,6 +78,7 @@
             $('#debug-text-area').html('');
         }else{
             stopAllRequest();
+            window.clearInterval(judgeHasEventTimeTimeId);
         }
     });
 
@@ -90,7 +97,19 @@
                         isSuccess = true;
                         stopAllRequest();
                     }else{
-                        logInfoSuccess('活动进行中,但没有抢到加密兔,继续尝试中.');
+                        if(hasEvent == null){
+                            logInfoSuccess('没有抢到加密兔,继续尝试中.');
+                        }else{
+                            if(hasEvent){
+                                if(hasRabbit){
+                                    logInfoSuccess('活动进行中,但没有抢到加密兔,继续尝试中.');
+                                }else{
+                                    logInfoSuccess('活动进行中,但加密兔被抢完了,请明天再试.');
+                                }
+                            }else{
+                                logInfoSuccess('活动已经结束或者尚未开始.');
+                            }
+                        }
                     }
                 }else{
                     if(DEBUG){
@@ -109,6 +128,21 @@
         if(!isSuccess){
             setAjaxIntervalClick(timeArrId);
         }
+    }
+
+    function judgeHasEventTime(){
+        judgeHasEventTimeTimeId = window.setInterval(function(){
+            $.ajax({
+                url : START_TIME_URL,
+                dataType : 'json',
+                success : function(result) {
+                    if(result.success == true){
+                        hasRabbit = result.result.hasRabbit;
+                        hasEvent = result.result.hasEvent;
+                    }
+                }
+            });
+        },100);
     }
 
     function stopAllRequest(){
