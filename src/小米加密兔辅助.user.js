@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         小米加密兔辅助
 // @namespace    http://tampermonkey.net/
-// @version      0.1.1
+// @version      0.1.2
 // @description  抢小米加密兔专用
 // @author       Mars Shen
 // @require      https://code.jquery.com/jquery-latest.js
@@ -194,21 +194,24 @@
         }
     }
     function logInfoSuccess(msg){
+        var time = new Date().toLocaleString();
         if(LOG_LEVEL >= 0){
-            var newMessage = "<b>[请求尝试成功]:</b> " + msg;
+            var newMessage = "<b>[请求成功(" + time + ")]:</b> " + msg;
             log(newMessage);
         }
     }
     function logInfoError(msg){
+        var time = new Date().toLocaleString();
         if(LOG_LEVEL >= 1){
-            var newMessage = "<b>[Error]:</b> " + msg;
+            var newMessage = "<b>[Error(" + time + ")]:</b> " + msg;
             log(newMessage);
         }
     }
 
     function logInfo(msg){
+        var time = new Date().toLocaleString();
         if(LOG_LEVEL >= 2){
-            var newMessage = "<b>[Info]:</b> " + msg;
+            var newMessage = "<b>[Info(" + time + ")]:</b> " + msg;
             log(newMessage);
         }
     }
