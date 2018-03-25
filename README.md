@@ -4,5 +4,5 @@
 
 ## 使用方法
 
-具体使用方法: [点我查看](http://www.marsshen.com/%E5%8C%BA%E5%9D%97%E9%93%BE/2018/03/23/%E9%A2%86%E5%85%BB%E5%B0%8F%E7%B1%B3%E5%8A%A0%E5%AF%86%E5%85%94%E8%BE%85%E5%8A%A9%E5%B7%A5%E5%85%B7/)
+具体使用方法: [点我查看](http://www.marsshen.com/2018/03/23/tools-Xiao-Mi-JIa-Mi-Tu-Tools/)
 
