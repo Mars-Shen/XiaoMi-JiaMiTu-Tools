@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         小米加密兔辅助
 // @namespace    http://tampermonkey.net/
-// @version      0.1.3
+// @version      0.1.3.1
 // @description  抢小米加密兔专用
 // @author       Mars Shen
 // @require      https://code.jquery.com/jquery-latest.js
@@ -74,7 +74,6 @@
             for(var i=0;i<MAX_REQUEST;i++){
                 setAjaxIntervalClick(i);
             }
-            requestCounter = 0;
             $('#debug-text-area').html('');
         }else{
             stopAllRequest();
@@ -92,7 +91,9 @@
                 $('#show-request-count-span').html(requestCounter);
             },
             complete(data, textStatus){
-                requestCounter--;
+                if(requestCounter > 0){
+                    requestCounter--;
+                }
                 $('#show-request-count-span').html(requestCounter);
             },
             success : function(result) {
