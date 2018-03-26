@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         小米加密兔辅助
 // @namespace    http://tampermonkey.net/
-// @version      0.1.2
+// @version      0.1.3
 // @description  抢小米加密兔专用
 // @author       Mars Shen
 // @require      https://code.jquery.com/jquery-latest.js
@@ -31,7 +31,7 @@
     var height = $('.mitu-hm-oper').height();
     var width = $('.mitu-hm-oper').width();
     var infoHeight = $('.mitu-info').height();
-    var requestErrorCounter = 0;
+    var requestCounter = 0;
     var hasRabbit = null;
     var hasEvent = null;
     var judgeHasEventTimeTimeId = -1;
@@ -39,7 +39,7 @@
 
     $(BUTTON_ID).attr('id','mitu_btn_tools');
     $('#mitu_btn_tools').after('<hr>');
-    $('#mitu_btn_tools').after('<div class="debug-text" id="show-error-count" style="display:none;text-align:left;padding-top: 10px;">请求错误统计: <span id="show-error-count-span">0</span></div>');
+    $('#mitu_btn_tools').after('<div class="debug-text" id="show-request-count" style="display:none;text-align:left;padding-top: 10px;">剩余请求数: <span id="show-request-count-span">0</span></div>');
     $('#mitu_btn_tools').after('<div class="debug-text" id="debug-text-area" style="display:none;overflow-y:scroll;text-align:left;background:white;"></div>');
     $('#mitu_btn_tools').after('<br class="debug-text" style="display:none;">');
     if(SHOW_DEBUG_BUTTON){
@@ -74,7 +74,7 @@
             for(var i=0;i<MAX_REQUEST;i++){
                 setAjaxIntervalClick(i);
             }
-            requestErrorCounter = 0;
+            requestCounter = 0;
             $('#debug-text-area').html('');
         }else{
             stopAllRequest();
@@ -87,6 +87,14 @@
         $.ajax({
             url : AJAX_REQUEST_URL,
             dataType : 'json',
+            beforeSend(data){
+                requestCounter++;
+                $('#show-request-count-span').html(requestCounter);
+            },
+            complete(data, textStatus){
+                requestCounter--;
+                $('#show-request-count-span').html(requestCounter);
+            },
             success : function(result) {
                 if(result.success == true){
                     if(result.result.got){
@@ -120,8 +128,6 @@
             error : function(result) {
                 if(DEBUG){
                     logInfoError('Error Status: '+ result.status + ', Error Status Text: '+ result.statusText);
-                    requestErrorCounter++;
-                    $('#show-error-count-span').html(requestErrorCounter);
                 }
             }
         });
