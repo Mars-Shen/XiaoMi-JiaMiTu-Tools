@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         小米加密兔辅助
 // @namespace    http://tampermonkey.net/
-// @version      0.1.3.1
+// @version      0.1.4
 // @description  抢小米加密兔专用
 // @author       Mars Shen
 // @require      https://code.jquery.com/jquery-latest.js
@@ -82,7 +82,7 @@
     });
 
     function clickAjax(timeArrId){
-        var isSuccess = false;
+        var needNextCall = true;
         $.ajax({
             url : AJAX_REQUEST_URL,
             dataType : 'json',
@@ -99,25 +99,25 @@
             success : function(result) {
                 if(result.success == true){
                     if(result.result.got){
-                        if(DEBUG){
-                            logInfoSuccess('成功抢到加密兔! 加密兔编号为"' + result.result.id + '"!');
-                        }
+                        logInfoSuccess('成功抢到加密兔! 加密兔编号为"' + result.result.id + '"!');
                         alert('成功抢到加密兔! 加密兔编号为"' + result.result.id + '"!');
-                        isSuccess = true;
-                        stopAllRequest();
+                        needNextCall = false;
+                        stopAjaxRequestBtn();
+                    }else if(result.result.firstStageEnds){
+                        logInfoSuccess('第一阶段活动已经结束,请等待小米官方下一阶段消息.');
+                        needNextCall = false;
+                        stopAjaxRequestBtn();
                     }else{
                         if(hasEvent == null){
                             logInfoSuccess('没有抢到加密兔,继续尝试中.');
-                        }else{
-                            if(hasEvent){
-                                if(hasRabbit){
-                                    logInfoSuccess('活动进行中,但没有抢到加密兔,继续尝试中.');
-                                }else{
-                                    logInfoSuccess('活动进行中,但加密兔被抢完了,请明天再试.');
-                                }
+                        }else if(hasEvent){
+                            if(hasRabbit){
+                                logInfoSuccess('活动进行中,但没有抢到加密兔,继续尝试中.');
                             }else{
-                                logInfoSuccess('活动已经结束或者尚未开始.');
+                                logInfoSuccess('活动进行中,但加密兔被抢完了,请明天再试.');
                             }
+                        }else{
+                            logInfoSuccess('活动已经结束或者尚未开始.');
                         }
                     }
                 }else{
@@ -132,9 +132,18 @@
                 }
             }
         });
-        if(!isSuccess){
+        if(needNextCall){
             setAjaxIntervalClick(timeArrId);
         }
+    }
+
+    function stopAjaxRequestBtn(){
+        AJAX_BTN_FLAG = false;
+        changeAjaxBtnValueByFlag();
+        for(var c_i=0;c_i<MAX_REQUEST;c_i++){
+            clearAjaxInterval(c_i);
+        }
+        window.clearInterval(judgeHasEventTimeTimeId);
     }
 
     function judgeHasEventTime(){
@@ -150,12 +159,6 @@
                 }
             });
         },100);
-    }
-
-    function stopAllRequest(){
-        for(var c_i=0;c_i<MAX_REQUEST;c_i++){
-            clearAjaxInterval(c_i);
-        }
     }
 
     function setAjaxIntervalClick(timeArrId){
